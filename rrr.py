@@ -21,13 +21,20 @@ s = Service(gecko_driver_path, log_output="geckodriver.log")
 
 # Create a new instance of the Firefox browser
 driver = webdriver.Firefox(service=s, options=firefox_options)
-
+policy_accepted = False
 
 def accept_rrr_privacy_policy():
+    global policy_accepted
+
+    # If the policy has already been accepted, just return
+    if policy_accepted:
+        return
+
     try:
         wait = WebDriverWait(driver, 10)
         # Wait for the privacy policy button to appear and then click it
         wait.until(EC.element_to_be_clickable((By.ID, 'CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll'))).click()
+        policy_accepted = True
     except TimeoutException:
         print("Privacy policy button did not appear or was not found on rrr.lt.")
 
